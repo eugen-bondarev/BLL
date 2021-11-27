@@ -1,6 +1,8 @@
 #include "AI/Network.h"
 #include "AI/Math.h"
 
+#include "Window/Window.h"
+
 int main()
 {
     try
@@ -21,6 +23,14 @@ int main()
         const AI::Matrix output = network.Feedforward(input);
 
         LINE_OUT(output.ToString());
+        
+        Window window;
+        while (window.IsRunning())
+        {
+            window.BeginFrame();
+                ImGui::ShowDemoWindow();            
+            window.EndFrame();
+        }
     }
     catch (const std::runtime_error& error)
     {

@@ -2,10 +2,10 @@
 
 namespace AI
 {
-    // Die Funktion generiert eine zufällige Zahl [0, 1)
+    // Die Funktion generiert eine zufällige Zahl [-1, 1)
     static Num GenRandomWeight(Num)
     {
-        return rand() / static_cast<Num>(RAND_MAX);
+        return rand() / static_cast<Num>(RAND_MAX) * 2.0f - 1.0f;
     }
 
     Layer::Layer(const LayerDescriptor& descriptor) :
