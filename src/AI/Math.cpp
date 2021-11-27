@@ -84,6 +84,21 @@ namespace AI
         return data[i];
     }
 
+    Matrix Matrix::Apply(const Function& function) const
+    {
+        Matrix result {Matrix(GetRows(), GetCols())};
+
+        for (size_t i = 0; i < result.GetRows(); ++i)
+        {
+            for (size_t j = 0; j < result.GetCols(); ++j)
+            {
+                result(i, j) = function((*this)(i, j));
+            }
+        }
+
+        return result;
+    }
+
     Matrix Matrix::operator*(const Matrix& other) const
     {
         AI_MATRIX_OPERATION_CONDITION(

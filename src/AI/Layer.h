@@ -16,8 +16,9 @@ namespace AI
     private:
         void ConnectWithPreviousLayer(const Matrix* previousLayerActivation);
         void InitWeights();
+        void Evaluate();
 
-        Activation g;
+        Activation g {sigmoid};
 
         Matrix a;
         Matrix z;

@@ -12,7 +12,7 @@ namespace AI
         size_t numNeurons;
 
         // Mathematische Funktion f(x).
-        Activation g;
+        Activation g {sigmoid};
     };
 }
 

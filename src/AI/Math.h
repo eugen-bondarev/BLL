@@ -35,6 +35,8 @@ namespace AI
         Num& operator()(const size_t row, const size_t col);
         Num  operator()(const size_t row, const size_t col) const;
 
+        Matrix Apply(const Function& function) const;
+
         Matrix operator*(const Matrix& other) const;
         Matrix operator+(const Matrix& other) const;
         Matrix operator-(const Matrix& other) const;

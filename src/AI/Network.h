@@ -14,7 +14,12 @@ namespace AI
         Network(const NetworkDescriptor& descriptor);
         Network(const Network& original);
 
+        Matrix Feedforward(const Matrix& input);
+
     private:
+        Layer& GetFirstLayer();
+        Layer& GetLastLayer();
+
         Vec<Layer> layers;
     };
 }

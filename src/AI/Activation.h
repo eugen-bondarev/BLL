@@ -9,7 +9,7 @@ namespace AI
 {
     struct Activation
     {
-        Function g;
+        Function function;
     };
 
     // Die am weitesten verbreitete Aktivierungsfunktion - Sigmoid (ist in Activation.cpp implementiert).

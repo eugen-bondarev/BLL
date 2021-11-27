@@ -12,6 +12,15 @@ int main()
             {4},
             {1}
         });
+
+        const AI::Matrix input = 
+        {
+            {1.0f}, {0.8f}
+        };
+
+        const AI::Matrix output = network.Feedforward(input);
+
+        LINE_OUT(output.ToString());
     }
     catch (const std::runtime_error& error)
     {

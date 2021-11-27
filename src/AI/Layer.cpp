@@ -9,10 +9,10 @@ namespace AI
     }
 
     Layer::Layer(const LayerDescriptor& descriptor) :
-        g{descriptor.g},
-        a{descriptor.numNeurons, 1},
-        z{descriptor.numNeurons, 1},
-        b{descriptor.numNeurons, 1}
+        g {descriptor.g},
+        a {descriptor.numNeurons, 1},
+        z {descriptor.numNeurons, 1},
+        b {descriptor.numNeurons, 1}
     {
     }
 
@@ -22,7 +22,13 @@ namespace AI
     }
 
     void Layer::InitWeights()
-    {        
-        w = Matrix(a.GetRows(), previousLayerActivation->GetCols(), GenRandomWeight);
+    {
+        w = Matrix(a.GetRows(), previousLayerActivation->GetRows(), GenRandomWeight);
+    }
+
+    void Layer::Evaluate()
+    {
+        z = w * (*previousLayerActivation) + b;
+        a = z.Apply(g.function);
     }
 }
