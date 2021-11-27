@@ -1,6 +1,7 @@
 #include "MNIST/MNISTHelper.h"
 #include "Window/Window.h"
 #include "AI/Network.h"
+#include "AI/Random.h"
 #include "AI/Math.h"
 
 int main()
@@ -11,8 +12,8 @@ int main()
             "C:/Users/azare/Documents/Dev/Cpp/BLL/dataset/test-images",
             "C:/Users/azare/Documents/Dev/Cpp/BLL/dataset/test-labels"
         )};
-
-        srand(time(nullptr));
+        
+        AI::Random::Reset();
 
         AI::Network network({
             {784},
@@ -21,11 +22,11 @@ int main()
             {10}
         });
 
-        const AI::Matrix output {network.Feedforward(trainingData[25].input)};
-        const AI::Matrix desiredOutput {trainingData[25].output};
+        // const AI::Matrix output {network.Feedforward(trainingData[25].input)};
+        // const AI::Matrix desiredOutput {trainingData[25].output};
 
-        LINE_OUT(output.ToString());
-        LINE_OUT(desiredOutput.ToString());
+        // LINE_OUT(output.ToString());
+        // LINE_OUT(desiredOutput.ToString());
         
         Window window;
         while (window.IsRunning())
