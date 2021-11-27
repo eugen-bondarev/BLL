@@ -10,11 +10,20 @@ int main()
 {
     try
     {
+        // Der Datensatz, mit welchem das Netz trainiert wird.
         AI::TrainingData trainingData {MNIST::Load(
+            "dataset/train-images",
+            "dataset/train-labels"
+        )};
+
+        // Der Datensatz, mit welchem das Netz getestet wird (enthält andere Samples).
+        AI::TrainingData testData {MNIST::Load(
             "dataset/test-images",
             "dataset/test-labels"
         )};
         
+        // Zufallszahlengenerator zurücksetzen, um bei jedem 
+        // Neustart neue Gewichtungen und Bias zu erzeugen.
         AI::Util::Random::Reset();
 
         AI::Network network({
@@ -24,19 +33,34 @@ int main()
             {10}
         });
 
-        const AI::Matrix output {network.Feedforward(trainingData[25].input)};
-        const AI::Matrix desiredOutput {trainingData[25].output};
+        // Stochastisches Gradientenabstiegsverfahren (Training).
+        network.SGD(trainingData, 10, 3, 1.5f);
 
-        LINE_OUT(output.ToString());
-        LINE_OUT(AI::Util::FindGreatestIndex(output));
-        
-        Window window;
-        while (window.IsRunning())
+        // Tests werden nach dem Training durchgeführt.
+        const size_t numTests {1000};
+        size_t rightPredictions {0};
+
+        for (size_t i = 0; i < numTests; ++i)
         {
-            window.BeginFrame();
-                ImGui::ShowDemoWindow();            
-            window.EndFrame();
+            // Zufälliges Sample aus dem Testdatensatz:
+            const AI::TrainingSample& randomSample {testData[rand() % testData.size()]};
+
+            // Die Prognose unseres Netzes:
+            const AI::Matrix output {network.Feedforward(randomSample.input)};
+            const size_t prediction {AI::Util::FindGreatestIndex(output)};
+
+            // Die gewünschte Prognose:
+            const size_t rightAnswer {AI::Util::FindGreatestIndex(randomSample.output)};
+
+            // Wenn die Prognose des Netzes der gewünschten Prognose entspricht,
+            // das Resultat als korrekt bezeichnen.
+            if (prediction == rightAnswer)
+            {
+                rightPredictions++;
+            }
         }
+
+        LINE_OUT(AI::StringFormat("Accuracy: %f", static_cast<float>(rightPredictions) / numTests));
     }
     catch (const std::runtime_error& error)
     {

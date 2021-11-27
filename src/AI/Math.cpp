@@ -50,6 +50,19 @@ namespace AI
         return (*this);
     }
 
+    Matrix& Matrix::Nullify()
+    {
+        for (size_t i = 0; i < GetRows(); ++i)
+        {
+            for (size_t j = 0; j < GetCols(); ++j)
+            {
+                (*this)(i, j) = 0.0f;
+            }
+        }
+
+        return (*this);
+    }
+
     size_t Matrix::GetRows() const
     {
         return !transposed ? rows : cols;
@@ -93,6 +106,29 @@ namespace AI
             for (size_t j = 0; j < result.GetCols(); ++j)
             {
                 result(i, j) = function((*this)(i, j));
+            }
+        }
+
+        return result;
+    }
+
+    Matrix Matrix::EntrywiseProduct(const Matrix& other) const
+    {
+        AI_MATRIX_OPERATION_CONDITION(
+            (*this).GetCols() == other.GetCols() && (*this).GetRows() == other.GetRows(), 
+            StringFormat("[operator +] the dimensions of given matrices mismatch. [m0.rows, m0.cols] != [m1.rows, m1.cols] ([%i, %i] != [%i, %i]).", 
+                static_cast<int>((*this).GetRows()), static_cast<int>((*this).GetCols()), 
+                static_cast<int>(other.GetRows()), static_cast<int>(other.GetCols())
+            )
+        );
+
+        Matrix result {Matrix(GetRows(), GetCols())};
+        
+        for (size_t i = 0; i < result.GetRows(); ++i)
+        {
+            for (size_t j = 0; j < result.GetCols(); ++j)
+            {
+                result(i, j) = (*this)(i, j) * other(i, j);
             }
         }
 
@@ -164,6 +200,21 @@ namespace AI
             for (size_t j = 0; j < result.GetCols(); ++j)
             {
                 result(i, j) = (*this)(i, j) - other(i, j);
+            }
+        }
+
+        return result;
+    }
+
+    Matrix Matrix::operator*(const Num scalar) const
+    {
+        Matrix result {Matrix(GetRows(), GetCols())};
+
+        for (size_t i = 0; i < result.GetRows(); ++i)
+        {
+            for (size_t j = 0; j < result.GetCols(); ++j)
+            {
+                result(i, j) = (*this)(i, j) * scalar;
             }
         }
 

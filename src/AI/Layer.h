@@ -2,6 +2,7 @@
 #define __AI_Layer_h__
 
 #include "LayerDescriptor.h"
+#include "Types.h"
 #include "Math.h"
 
 namespace AI
@@ -14,9 +15,10 @@ namespace AI
         Layer(const LayerDescriptor& descriptor);
 
     private:
-        void ConnectWithPreviousLayer(const Matrix* previousLayerActivation);
+        void ConnectWithPreviousLayer(Matrix* previousLayerActivation);
         void InitWeights();
         void Evaluate();
+        void PropagateError(const Matrix& errorPropagation, Matrix& currentOutput, LayerAdjustments& adjustments);
 
         Activation g {sigmoid};
 
@@ -25,7 +27,7 @@ namespace AI
         Matrix w;
         Matrix b;
 
-        const Matrix* previousLayerActivation {nullptr};
+        Matrix* previousLayerActivation {nullptr};
     };
 }
 

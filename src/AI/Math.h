@@ -26,6 +26,7 @@ namespace AI
         Matrix(const size_t rows, const size_t cols, const Function& generator);
 
         Matrix& Transpose();
+        Matrix& Nullify();
 
         size_t GetRows() const;
         size_t GetCols() const;
@@ -37,9 +38,11 @@ namespace AI
 
         Matrix Apply(const Function& function) const;
 
+        Matrix EntrywiseProduct(const Matrix& other) const;
         Matrix operator*(const Matrix& other) const;
         Matrix operator+(const Matrix& other) const;
         Matrix operator-(const Matrix& other) const;
+        Matrix operator*(const Num scalar) const;
 
         Matrix& operator*=(const Matrix& other);
         Matrix& operator+=(const Matrix& other);

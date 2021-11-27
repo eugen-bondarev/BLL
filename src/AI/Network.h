@@ -5,6 +5,7 @@
 
 #include "NetworkDescriptor.h"
 #include "Layer.h"
+#include "Types.h"
 
 namespace AI
 {
@@ -15,10 +16,15 @@ namespace AI
         Network(const Network& original);
 
         Matrix Feedforward(const Matrix& input);
+        void SGD(const TrainingData& trainingData, const size_t miniBatchSize, const size_t numEpochs, const Num eta);
 
     private:
         Layer& GetFirstLayer();
         Layer& GetLastLayer();
+
+        void Backpropagation(const TrainingData& miniBatch, NetworkAdjustments& adjustments);
+        void CreateAdjustmentsShape(NetworkAdjustments& adjustments);
+        void ApplyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta);
 
         Vec<Layer> layers;
     };

@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "../AI/TrainingData.h"
 #include "../AI/Util/Path.h"
+#include "../AI/Types.h"
 
 namespace MNIST
 {

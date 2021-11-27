@@ -10,6 +10,7 @@ namespace AI
     struct Activation
     {
         Function function;
+        Function derivative;
     };
 
     // Die am weitesten verbreitete Aktivierungsfunktion - Sigmoid (ist in Activation.cpp implementiert).

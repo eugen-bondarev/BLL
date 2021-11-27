@@ -8,7 +8,12 @@ namespace AI
         {
             return 1.0f / (1.0f + exp(-x));
         }
+
+        Num SigmoidDerivative(const Num x)
+        {
+            return Sigmoid(x) * (1.0f - Sigmoid(x));
+        }
     }
 
-    Activation sigmoid = { Templates::Sigmoid };
+    Activation sigmoid = { Templates::Sigmoid, Templates::SigmoidDerivative };
 }
