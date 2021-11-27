@@ -3,14 +3,10 @@
 
 #pragma once
 
-#include <functional>
 #include "Common.h"
 
 namespace AI
 {
-    // Funktion im mathematischen Sinne.
-    using Function = std::function<Num(Num x)>;
-
     struct Activation
     {
         Function g;
