@@ -1,20 +1,21 @@
 #include "MNIST/MNISTHelper.h"
 #include "Window/Window.h"
+
+#include "AI/Util/Random.h"
+#include "AI/Util/Util.h"
 #include "AI/Network.h"
-#include "AI/Random.h"
 #include "AI/Math.h"
-#include "AI/Util.h"
 
 int main()
 {
     try
     {
         AI::TrainingData trainingData {MNIST::Load(
-            "C:/Users/azare/Documents/Dev/Cpp/BLL/dataset/test-images",
-            "C:/Users/azare/Documents/Dev/Cpp/BLL/dataset/test-labels"
+            "dataset/test-images",
+            "dataset/test-labels"
         )};
         
-        AI::Random::Reset();
+        AI::Util::Random::Reset();
 
         AI::Network network({
             {784},

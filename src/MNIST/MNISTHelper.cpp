@@ -4,19 +4,19 @@
 
 namespace MNIST
 {
-    TrainingData Load(const Str& imagesPath, const Str& labelsPath)
+    TrainingData Load(const Path& imagesPath, const Path& labelsPath)
     {
-        const std::vector<std::vector<uint8_t>> images = mnist::read_mnist_image_file(imagesPath);
-        const std::vector<uint8_t> labels = mnist::read_mnist_label_file(labelsPath);
+        const std::vector<std::vector<uint8_t>> images = mnist::read_mnist_image_file(imagesPath());
+        const std::vector<uint8_t> labels = mnist::read_mnist_label_file(labelsPath());
 
         if (images.size() == 0)
         {
-            throw std::runtime_error("File " + imagesPath + " not found");
+            throw std::runtime_error("File " + imagesPath() + " not found");
         }
 
         if (labels.size() == 0)
         {
-            throw std::runtime_error("File " + labelsPath + " not found");
+            throw std::runtime_error("File " + labelsPath() + " not found");
         }
 
         TrainingData dataset(images.size());

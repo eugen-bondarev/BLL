@@ -4,12 +4,14 @@
 #pragma once
 
 #include "../AI/TrainingData.h"
+#include "../AI/Util/Path.h"
 
 namespace MNIST
 {
     using namespace AI;
+    using namespace AI::Util;
 
-    TrainingData Load(const Str& imagesPath, const Str& labelsPath);
+    TrainingData Load(const Path& imagesPath, const Path& labelsPath);
 }
 
 #endif

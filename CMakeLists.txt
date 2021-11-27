@@ -12,6 +12,8 @@ file(GLOB_RECURSE var_src src/*.cpp external/imgui/*.cpp)
 
 add_executable(BLL ${var_src}) 
 
+add_compile_definitions(PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
+
 target_link_libraries(BLL glew_s)
 target_link_libraries(BLL glfw)
 
