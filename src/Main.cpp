@@ -3,6 +3,7 @@
 #include "AI/Network.h"
 #include "AI/Random.h"
 #include "AI/Math.h"
+#include "AI/Util.h"
 
 int main()
 {
@@ -22,11 +23,11 @@ int main()
             {10}
         });
 
-        // const AI::Matrix output {network.Feedforward(trainingData[25].input)};
-        // const AI::Matrix desiredOutput {trainingData[25].output};
+        const AI::Matrix output {network.Feedforward(trainingData[25].input)};
+        const AI::Matrix desiredOutput {trainingData[25].output};
 
-        // LINE_OUT(output.ToString());
-        // LINE_OUT(desiredOutput.ToString());
+        LINE_OUT(output.ToString());
+        LINE_OUT(AI::Util::FindGreatestIndex(output));
         
         Window window;
         while (window.IsRunning())
