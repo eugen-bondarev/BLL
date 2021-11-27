@@ -15,4 +15,10 @@ add_executable(BLL ${var_src})
 target_link_libraries(BLL glew_s)
 target_link_libraries(BLL glfw)
 
-target_include_directories(BLL PRIVATE external/glew/include external/glfw/include external/imgui) 
+target_include_directories(
+    BLL PRIVATE 
+    external/glew/include 
+    external/glfw/include 
+    external/mnist_reader
+    external/imgui
+) 

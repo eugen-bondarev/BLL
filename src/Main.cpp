@@ -1,28 +1,31 @@
+#include "MNIST/MNISTHelper.h"
+#include "Window/Window.h"
 #include "AI/Network.h"
 #include "AI/Math.h"
-
-#include "Window/Window.h"
 
 int main()
 {
     try
     {
+        AI::TrainingData trainingData {MNIST::Load(
+            "C:/Users/azare/Documents/Dev/Cpp/BLL/dataset/test-images",
+            "C:/Users/azare/Documents/Dev/Cpp/BLL/dataset/test-labels"
+        )};
+
         srand(time(nullptr));
 
         AI::Network network({
-            {2},
-            {4},
-            {1}
+            {784},
+            {16},
+            {16},
+            {10}
         });
 
-        const AI::Matrix input = 
-        {
-            {1.0f}, {0.8f}
-        };
-
-        const AI::Matrix output = network.Feedforward(input);
+        const AI::Matrix output {network.Feedforward(trainingData[25].input)};
+        const AI::Matrix desiredOutput {trainingData[25].output};
 
         LINE_OUT(output.ToString());
+        LINE_OUT(desiredOutput.ToString());
         
         Window window;
         while (window.IsRunning())
@@ -34,7 +37,7 @@ int main()
     }
     catch (const std::runtime_error& error)
     {
-        LINE_OUT(error.what());
+        LINE_OUT("[Exception] " + std::string(error.what()));
     }
 
     return 0;

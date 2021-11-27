@@ -197,11 +197,11 @@ namespace AI
 
         for (size_t i = 0; i < GetRows(); ++i)
         {
+            if (i != 0) stream << '\n';
             for (size_t j = 0; j < GetCols(); ++j)
             {
                 stream << operator()(i, j) << ' ';
             }
-            stream << '\n';
         }
 
         return stream.str();
