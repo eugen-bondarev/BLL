@@ -1,8 +1,12 @@
-#include <iostream>
+#include "AI/Network.h"
 
 int main()
 {
-    std::cout << "Hello, world!\n";
+    AI::Network network({
+        {2},
+        {4},
+        {1}
+    });
 
     return 0;
 }
