@@ -23,7 +23,8 @@ namespace AI
 
     void Layer::InitWeights()
     {
-        w = Matrix(a.GetRows(), previousLayerActivation->GetRows(), GenRandomWeight);
+        const Matrix& prevA = *previousLayerActivation;
+        w = Matrix(a.GetRows(), prevA.GetRows(), GenRandomWeight);
     }
 
     void Layer::Evaluate()
@@ -32,19 +33,19 @@ namespace AI
         a = z.Apply(g.function);
     }
 
-    void Layer::PropagateError(const Matrix& errorPropagation, Matrix& currentOutput, LayerAdjustments& adjustments)
+    void Layer::PropagateError(const Matrix& y, Matrix& errorPropagation, LayerAdjustments& adjustments)
     {
-		const Matrix delCdelA = (a - errorPropagation) * 2.0f;
+        const Matrix delCdelA = (a - y) * 2.0f;
         const Matrix delAdelZ = z.Apply(g.derivative);
 		const Matrix delCdelZ = delCdelA.EntrywiseProduct(delAdelZ);
         
         const Matrix& biasGradient = delCdelZ;
-		const Matrix  weightGradient = delCdelZ * previousLayerActivation->Transpose();
-		const Matrix  activationGradient = w.Transpose() * delCdelZ;
+        const Matrix weightGradient = delCdelZ * previousLayerActivation->Transpose();
+        const Matrix activationGradient = w.Transpose() * delCdelZ;
 
         adjustments.b -= biasGradient;
         adjustments.w -= weightGradient;
-        currentOutput -= activationGradient;
+        errorPropagation -= activationGradient;
 
 		// Transpose them back.
 		previousLayerActivation->Transpose();

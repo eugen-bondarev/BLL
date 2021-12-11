@@ -79,13 +79,13 @@ namespace AI
         for (const TrainingSample& sample : miniBatch)
         {
             const Matrix output {Feedforward(sample.input)};
-            Matrix errorPropagation {sample.output};
+            Matrix y {sample.output};
 
             for (size_t l = layers.size(); l--> 1;)
             {
-                Matrix currentOutput {layers[l - 1].a};
-                layers[l].PropagateError(errorPropagation, currentOutput, adjustments[l]);
-                errorPropagation = currentOutput;
+                Matrix errorPropagation {layers[l - 1].a};
+                layers[l].PropagateError(y, errorPropagation, adjustments[l]);
+                y = errorPropagation;
             }
         }
     }
