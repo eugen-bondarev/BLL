@@ -37,7 +37,7 @@ namespace AI
     {
         const Matrix delCdelA = (a - y) * 2.0f;
         const Matrix delAdelZ = z.Apply(g.derivative);
-		const Matrix delCdelZ = delCdelA.EntrywiseProduct(delAdelZ);
+        const Matrix delCdelZ = delCdelA.EntrywiseProduct(delAdelZ);
         
         const Matrix& biasGradient = delCdelZ;
         const Matrix weightGradient = delCdelZ * previousLayerActivation->Transpose();
@@ -48,7 +48,7 @@ namespace AI
         errorPropagation -= activationGradient;
 
 		// Transpose them back.
-		previousLayerActivation->Transpose();
-		w.Transpose();
+        previousLayerActivation->Transpose();
+        w.Transpose();
     }
 }
