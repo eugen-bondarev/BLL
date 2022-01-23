@@ -3,6 +3,7 @@
 
 #include "AI/Util/Random.h"
 #include "AI/Util/Util.h"
+#include "AI/Util/ImGuiMatrixRenderer.h"
 #include "AI/Network.h"
 #include "AI/Math.h"
 
@@ -10,13 +11,20 @@ int main()
 {
     try
     {
+        // Der Datensatz, mit welchem das Netz getestet wird (enthält andere Samples).
+        const AI::TrainingData testData{ MNIST::Load(
+            "dataset/test-images",
+            "dataset/test-labels"
+        ) };
+
         Window window{ 800, 600 };
         while (window.IsRunning())
         {
             window.BeginFrame();
 
+            ImGui::SetNextWindowContentSize(ImVec2(28 * 10 - 1, 28 * 10 - 1));
             ImGui::Begin("BLL");
-            ImGui::Text("Hello, world!");
+                ImGui::RenderMatrix(testData[50].input);
             ImGui::End();
 
             window.EndFrame();
@@ -26,12 +34,6 @@ int main()
         const AI::TrainingData trainingData{ MNIST::Load(
             "dataset/train-images",
             "dataset/train-labels"
-        ) };
-
-        // Der Datensatz, mit welchem das Netz getestet wird (enthält andere Samples).
-        const AI::TrainingData testData{ MNIST::Load(
-            "dataset/test-images",
-            "dataset/test-labels"
         ) };
         
         // Zufallszahlengenerator zurücksetzen, um bei jedem 
