@@ -3,6 +3,8 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <stdexcept>
+
 static void ImGuiInit(GLFWwindow* handle)
 {
     IMGUI_CHECKVERSION();
@@ -60,16 +62,19 @@ static void ImGuiEndFrame(GLFWwindow* handle)
 
 static void GetMonitorResolution(size_t& width, size_t& height)
 {    
-    const GLFWvidmode* mode {glfwGetVideoMode(glfwGetPrimaryMonitor())};
+    const GLFWvidmode* mode{ glfwGetVideoMode(glfwGetPrimaryMonitor()) };
     width = static_cast<size_t>(mode->width);
     height = static_cast<size_t>(mode->height);
 }
 
 Window::Window(const size_t width, const size_t height)
 {
-    glfwInit();
-    glfwDefaultWindowHints();
+    if (!glfwInit())
+    {
+        throw std::runtime_error{ "GLFW-Initialisierung fehlgeschlagen." };
+    }
 
+    glfwDefaultWindowHints();
     size_t finalWidth {width}, finalHeight {height};
     if (width == 0 || height == 0) { GetMonitorResolution(finalWidth, finalHeight); }
     handle = glfwCreateWindow(finalWidth, finalHeight, "BLL", nullptr, nullptr);
@@ -77,7 +82,10 @@ Window::Window(const size_t width, const size_t height)
     glfwMakeContextCurrent(handle);
     glfwSwapInterval(1);
 
-    glewInit();
+    if (glewInit() != GLEW_OK)
+    {
+        throw std::runtime_error{ "GLEW-Initialisierung fehlgeschlagen." };
+    }
 
     ImGuiInit(handle);
 }

@@ -40,6 +40,11 @@ namespace AI
 
         Str Path::Resolve() const
         {
+            if (projectRoot.empty())
+            {
+                return fullPath;
+            }
+
             return projectRoot + "/" + fullPath;
         }
         
