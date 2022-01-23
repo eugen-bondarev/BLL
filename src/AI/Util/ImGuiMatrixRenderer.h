@@ -7,7 +7,7 @@
 
 namespace ImGui
 {
-	void RenderMatrix(const AI::Matrix& matrix);
+	void RenderMatrix(const AI::Matrix& matrix, const size_t cellSize = 10);
 }
 
 #endif

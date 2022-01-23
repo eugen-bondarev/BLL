@@ -4,7 +4,7 @@
 
 namespace ImGui
 {
-	void RenderMatrix(const AI::Matrix& matrix, const size_t cellSize = 10)
+	void RenderMatrix(const AI::Matrix& matrix, const size_t cellSize)
 	{
 		ImVec2 contentPos = ImGui::GetWindowContentRegionMin();
 		contentPos.x += ImGui::GetWindowPos().x;
