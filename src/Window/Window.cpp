@@ -77,7 +77,7 @@ Window::Window(const size_t width, const size_t height)
     glfwDefaultWindowHints();
     size_t finalWidth {width}, finalHeight {height};
     if (width == 0 || height == 0) { GetMonitorResolution(finalWidth, finalHeight); }
-    handle = glfwCreateWindow(finalWidth, finalHeight, "BLL", nullptr, nullptr);
+    handle = glfwCreateWindow(finalWidth, finalHeight, "E. Bondarev, BLL", nullptr, nullptr);
     if (width == 0 || height == 0) { glfwMaximizeWindow(handle); }
     glfwMakeContextCurrent(handle);
     glfwSwapInterval(1);

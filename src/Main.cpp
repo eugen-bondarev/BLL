@@ -11,24 +11,31 @@ int main()
 {
     try
     {
+        AI::Util::Random::Reset();
+
         // Der Datensatz, mit welchem das Netz getestet wird (enthält andere Samples).
         const AI::TrainingData testData{ MNIST::Load(
             "dataset/test-images",
             "dataset/test-labels"
         ) };
 
-        Window window{ 800, 600 };
+        Window window{ 350, 350 };
         while (window.IsRunning())
         {
             window.BeginFrame();
 
             ImGui::SetNextWindowContentSize(ImVec2(28 * 10 - 1, 28 * 10 - 1));
-            ImGui::Begin("BLL");
-                ImGui::RenderMatrix(testData[50].input);
+            
+            static const size_t randomSample{ rand() % testData.size() };
+            static const size_t label{ AI::Util::FindGreatestIndex(testData[randomSample].output) };
+            ImGui::Begin(AI::StringFormat("%i. Sample, label: %i", randomSample, label).c_str());
+                ImGui::RenderMatrix(testData[randomSample].input);
             ImGui::End();
 
             window.EndFrame();
         }
+
+        return 0;
 
         // Der Datensatz, mit welchem das Netz trainiert wird.
         const AI::TrainingData trainingData{ MNIST::Load(
