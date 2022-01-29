@@ -14,10 +14,12 @@ namespace AI
         size_t FindGreatestIndex(const Matrix& matrix1D);
 
         template <typename T>
-        void Shuffle(Vec<T>& vector)
+        Vec<T> Shuffle(const Vec<T>& vector)
         {
-            static auto randomEngine = std::default_random_engine {};
-            std::shuffle(std::begin(vector), std::end(vector), randomEngine);
+            Vec<T> copy{ vector };
+            static auto randomEngine = std::default_random_engine{};
+            std::shuffle(std::begin(copy), std::end(copy), randomEngine);
+            return copy;
         }
     }    
 }

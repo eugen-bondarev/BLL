@@ -16,7 +16,7 @@ namespace AI
 
             // Alternative:
             layers.emplace_back(descriptor[i]);
-            Layer& layer = layers[layers.size() - 1];
+            Layer& layer{ layers[layers.size() - 1] };
 
             layer.ConnectWithPreviousLayer(&layers[i - 1].a);
             layer.InitWeights();
@@ -65,10 +65,10 @@ namespace AI
 
     static TrainingData CreateMiniBatch(const TrainingData& trainingData, const size_t miniBatchSize, const size_t sample)
     {
-        TrainingData miniBatch(miniBatchSize);
+        TrainingData miniBatch{ miniBatchSize };
         for (size_t i = 0; i < miniBatchSize; i++)
         {
-            const size_t trainingDataIndex {static_cast<size_t>((sample / static_cast<Num>(trainingData.size())) * (trainingData.size() - miniBatchSize) + i)};
+            const size_t trainingDataIndex{ static_cast<size_t>((sample / static_cast<Num>(trainingData.size())) * (trainingData.size() - miniBatchSize) + i) };
             miniBatch[i] = trainingData[trainingDataIndex];
         }
         return miniBatch;
@@ -78,12 +78,12 @@ namespace AI
     {
         for (const TrainingSample& sample : miniBatch)
         {
-            const Matrix output {Feedforward(sample.input)};
-            Matrix y {sample.output};
+            const Matrix output{ Feedforward(sample.input) };
+            Matrix y{ sample.output };
 
             for (size_t l = layers.size(); l--> 1;)
             {
-                Matrix errorPropagation {layers[l - 1].a};
+                Matrix errorPropagation{ layers[l - 1].a };
                 layers[l].PropagateError(y, errorPropagation, adjustments[l]);
                 y = errorPropagation;
             }
@@ -104,17 +104,15 @@ namespace AI
 
     void Network::SGD(const TrainingData& trainingData, const size_t miniBatchSize, const size_t numEpochs, const Num eta)
     {
-        TrainingData trainingDataCopy {trainingData};
-        
         for (size_t epoch = 0; epoch < numEpochs; ++epoch)
         {
-            Util::Shuffle(trainingDataCopy);
+            const TrainingData shuffled{ Util::Shuffle(trainingData) };
 
-            NetworkAdjustments adjustments {};
+            NetworkAdjustments adjustments{};
             CreateAdjustmentsShape(adjustments);
-            for (size_t sample = 0; sample < trainingDataCopy.size(); sample += miniBatchSize)
+            for (size_t sample = 0; sample < shuffled.size(); sample += miniBatchSize)
             {
-                TrainingData miniBatch {CreateMiniBatch(trainingDataCopy, miniBatchSize, sample)};
+                const TrainingData miniBatch{ CreateMiniBatch(shuffled, miniBatchSize, sample) };
                 Backpropagation(miniBatch, adjustments);
                 ApplyAdjustments(adjustments, miniBatchSize, eta);
             }
