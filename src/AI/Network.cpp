@@ -90,7 +90,7 @@ namespace AI
         }
     }
 
-    void Network::ApplyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta)
+    void Network::ApplyAndNullifyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta)
     {
         for (size_t l = 1; l < layers.size(); ++l)
         {
@@ -114,7 +114,7 @@ namespace AI
             {
                 const TrainingData miniBatch{ CreateMiniBatch(shuffled, miniBatchSize, sample) };
                 Backpropagation(miniBatch, adjustments);
-                ApplyAdjustments(adjustments, miniBatchSize, eta);
+                ApplyAndNullifyAdjustments(adjustments, miniBatchSize, eta);
             }
 
             VAR_OUT(epoch);

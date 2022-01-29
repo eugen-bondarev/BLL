@@ -11,6 +11,8 @@ int main()
 {
     try
     {
+        // Zufallszahlengenerator zurücksetzen, um bei jedem 
+        // Neustart neue Gewichtungen und Bias zu erzeugen.
         AI::Util::Random::Reset();
 
         // Der Datensatz, mit welchem das Netz getestet wird (enthält andere Samples).
@@ -19,33 +21,11 @@ int main()
             "dataset/test-labels"
         ) };
 
-        Window window{ 350, 350 };
-        while (window.IsRunning())
-        {
-            window.BeginFrame();
-
-            ImGui::SetNextWindowContentSize(ImVec2(28 * 10 - 1, 28 * 10 - 1));
-            
-            static const size_t randomSample{ rand() % testData.size() };
-            static const size_t label{ AI::Util::FindGreatestIndex(testData[randomSample].output) };
-            ImGui::Begin(AI::StringFormat("%i. Sample, label: %i", randomSample, label).c_str());
-                ImGui::RenderMatrix(testData[randomSample].input);
-            ImGui::End();
-
-            window.EndFrame();
-        }
-
-        return 0;
-
         // Der Datensatz, mit welchem das Netz trainiert wird.
         const AI::TrainingData trainingData{ MNIST::Load(
             "dataset/train-images",
             "dataset/train-labels"
         ) };
-        
-        // Zufallszahlengenerator zurücksetzen, um bei jedem 
-        // Neustart neue Gewichtungen und Bias zu erzeugen.
-        AI::Util::Random::Reset();
 
         AI::Network network({
             { 784 },
@@ -55,7 +35,7 @@ int main()
         });
 
         // Stochastisches Gradientenabstiegsverfahren (Training).
-        network.SGD(trainingData, 10, 3, 1.5f);
+        network.SGD(trainingData, 20, 5, 1.5f);
 
         // Tests werden nach dem Training durchgeführt.
         const size_t numTests{ 1000 };
