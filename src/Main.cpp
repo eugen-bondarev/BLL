@@ -15,6 +15,16 @@ int main()
         // Neustart neue Gewichtungen und Bias zu erzeugen.
         AI::Util::Random::Reset();
 
+        Window win{ 640, 480 };
+
+        while (win.IsRunning())
+        {
+            win.BeginFrame();
+            ImGui::ShowDemoWindow();
+            win.EndFrame();
+        }
+        return 0;
+
         // Der Datensatz, mit welchem das Netz getestet wird (enthält andere Samples).
         const AI::TrainingData testData{ MNIST::Load(
             "dataset/test-images",

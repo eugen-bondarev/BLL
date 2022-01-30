@@ -1,0 +1,5 @@
+glew
+glfw3
+imgui[glfw-binding]
+imgui[opengl3-binding]
+imgui[docking-experimental]
