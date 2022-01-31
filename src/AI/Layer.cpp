@@ -33,7 +33,7 @@ namespace AI
         a = z.Apply(g.function);
     }
 
-    void Layer::PropagateError(const Matrix& y, Matrix& errorPropagation, LayerAdjustments& adjustments)
+    Matrix Layer::PropagateError(const Matrix& y, LayerAdjustments& adjustments)
     {
         const Matrix delCdelA = (a - y) * 2.0f;
         const Matrix delAdelZ = z.Apply(g.derivative);
@@ -45,10 +45,11 @@ namespace AI
 
         adjustments.b -= biasGradient;
         adjustments.w -= weightGradient;
-        errorPropagation -= activationGradient;
 
 		// Transpose them back.
         previousLayerActivation->Transpose();
         w.Transpose();
+
+        return activationGradient;
     }
 }

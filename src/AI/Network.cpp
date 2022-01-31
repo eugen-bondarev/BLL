@@ -78,14 +78,13 @@ namespace AI
     {
         for (const TrainingSample& sample : miniBatch)
         {
-            const Matrix output{ Feedforward(sample.input) };
+            Feedforward(sample.input);
             Matrix y{ sample.output };
 
             for (size_t l = layers.size(); l--> 1;)
             {
-                Matrix errorPropagation{ layers[l - 1].a };
-                layers[l].PropagateError(y, errorPropagation, adjustments[l]);
-                y = errorPropagation;
+                const Matrix errorPropagation{ layers[l].PropagateError(y, adjustments[l]) };
+                y = layers[l - 1].a - errorPropagation;
             }
         }
     }

@@ -18,7 +18,7 @@ namespace AI
         void ConnectWithPreviousLayer(Matrix* previousLayerActivation);
         void InitWeights();
         void Evaluate();
-        void PropagateError(const Matrix& errorPropagation, Matrix& currentOutput, LayerAdjustments& adjustments);
+        Matrix PropagateError(const Matrix& errorPropagation, LayerAdjustments& adjustments);
 
         Activation g {sigmoid};
 
