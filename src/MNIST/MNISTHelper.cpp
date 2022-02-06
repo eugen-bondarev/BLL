@@ -29,8 +29,11 @@ namespace MNIST
                 input[j] = images[i][j] / 255.0f;
             }
 
-            dataset[i].input = Matrix(input.size(), 1, input);
+            Eigen::Map<Matrix> m(input.data(), input.size(), 1);
+            dataset[i].input = Matrix(m);
+
             dataset[i].output = Matrix(10, 1);
+            dataset[i].output.setZero();
             dataset[i].output(static_cast<int>(labels[i]), 0) = 1.0f;
         }
 

@@ -58,8 +58,11 @@ namespace AI
         adjustments.resize(layers.size());
         for (size_t l = 1; l < layers.size(); ++l)
         {
-            adjustments[l].w = Matrix(layers[l].w.GetRows(), layers[l].w.GetCols());
-            adjustments[l].b = Matrix(layers[l].b.GetRows(), layers[l].b.GetCols());
+            adjustments[l].w = Matrix(layers[l].w.rows(), layers[l].w.cols());
+            adjustments[l].w.setZero();
+
+            adjustments[l].b = Matrix(layers[l].b.rows(), layers[l].b.cols());
+            adjustments[l].b.setZero();
         }
     }
 
@@ -79,7 +82,7 @@ namespace AI
         for (const TrainingSample& sample : miniBatch)
         {
             Feedforward(sample.input);
-            Matrix y{ sample.output };
+            Matrix y{ (sample.output.array() - layers[layers.size() - 1].a.array()).pow(1) };
 
             for (size_t l = layers.size(); l--> 1;)
             {
@@ -96,8 +99,8 @@ namespace AI
             layers[l].w += adjustments[l].w * (eta / miniBatchSize);
             layers[l].b += adjustments[l].b * (eta / miniBatchSize);
 
-            adjustments[l].w.Nullify();
-            adjustments[l].b.Nullify();
+            adjustments[l].w.setZero();
+            adjustments[l].b.setZero();
         }
     }
 

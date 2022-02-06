@@ -8,8 +8,21 @@
 #include "AI/Math.h"
 #include "AI/Metrics.h"
 
+#include <iostream>
+
+#define LO(x) std::cout << x << '\n'
+
 int main()
 {
+    // std::vector<float> vals = { 1, 2, 3, 4, 5, 6 };
+    // Eigen::Map<AI::Matrix> m{vals.data(), 3, 2};
+    // AI::Matrix mat{m};
+    // AI::Matrix m1{mat.unaryExpr([](float x) { return x * 2; })};
+    // LO(mat);
+    // LO(m1);
+
+    // return 0;
+
     try
     {
         AI_PROFILER_BEGIN("BLL");

@@ -14,6 +14,7 @@ namespace AI
         z {descriptor.numNeurons, 1},
         b {descriptor.numNeurons, 1}
     {
+        b.setRandom();
     }
 
     void Layer::ConnectWithPreviousLayer(Matrix* previousLayerActivation)
@@ -24,31 +25,28 @@ namespace AI
     void Layer::InitWeights()
     {
         const Matrix& prevA = *previousLayerActivation;
-        w = Matrix(a.GetRows(), prevA.GetRows(), GenRandomWeight);
+        w = Matrix(a.rows(), prevA.rows());
+        w.setRandom();
     }
 
     void Layer::Evaluate()
     {
         z = w * (*previousLayerActivation) + b;
-        a = z.Apply(g.function);
+        a = z.unaryExpr(g.function);
     }
 
     Matrix Layer::PropagateError(const Matrix& y, LayerAdjustments& adjustments)
     {
-        const Matrix delCdelA = (a - y) * 2.0f;
-        const Matrix delAdelZ = z.Apply(g.derivative);
-        const Matrix delCdelZ = delCdelA.EntrywiseProduct(delAdelZ);
+        const Matrix delCdelA = (a - y) * 1.0f;
+        const Matrix delAdelZ = z.unaryExpr(g.derivative);
+        const Matrix delCdelZ = delCdelA.array() * delAdelZ.array();
         
         const Matrix& biasGradient = delCdelZ;
-        const Matrix weightGradient = delCdelZ * previousLayerActivation->Transpose();
-        const Matrix activationGradient = w.Transpose() * delCdelZ;
+        const Matrix weightGradient = delCdelZ * previousLayerActivation->transpose();
+        const Matrix activationGradient = w.transpose() * delCdelZ;
 
         adjustments.b -= biasGradient;
         adjustments.w -= weightGradient;
-
-		// Transpose them back.
-        previousLayerActivation->Transpose();
-        w.Transpose();
 
         return activationGradient;
     }
