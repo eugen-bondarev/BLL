@@ -5,8 +5,13 @@
 
 #include "Math.h"
 
+#include <vector>
+
 namespace AI
 {
+    template <typename T>
+    using Vec = std::vector<T>;
+
     struct TrainingSample
     {
         Matrix input;

@@ -115,8 +115,6 @@ namespace AI
                 Backpropagation(miniBatch, adjustments);
                 ApplyAndNullifyAdjustments(adjustments, miniBatchSize, eta);
             }
-
-            VAR_OUT(epoch);
         }
     }
 }

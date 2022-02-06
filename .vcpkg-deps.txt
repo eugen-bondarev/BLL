@@ -1,3 +1,4 @@
 glew
 glfw3
+eigen3
 imgui[glfw-binding,opengl3-binding,docking-experimental]
