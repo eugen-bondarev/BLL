@@ -129,34 +129,33 @@ namespace AI
     )
     {
         float averageAccuracy = 0.f;
-        float trainingDuration = 0.f;
+        const AI::Timer trainingTimer;
         for (size_t epoch = 0; epoch < numEpochs; ++epoch)
         {
-            AI::Timer epochTimer;
+            const AI::Timer epochTimer;
 
             const TrainingData shuffled{ Util::Shuffle(trainingData) };
 
             for (size_t sample = 0; sample < shuffled.size(); sample += miniBatchSize)
             {
                 NetworkAdjustments adjustments = CreateAdjustmentsShape();
-                const TrainingData miniBatch{ CreateMiniBatch(shuffled, miniBatchSize, sample) };
+                const TrainingData miniBatch = CreateMiniBatch(shuffled, miniBatchSize, sample);
                 Backpropagation(miniBatch, adjustments);
                 ApplyAdjustments(adjustments, miniBatchSize, eta);
             }
 
-            float epochDuration = epochTimer.Read();
+            const float epochDuration = epochTimer.Read();
             if (testData.size()) 
             {
                 const float accuracy = Test(testData, comparator);
-                LINE_OUT(StringFormat("Epoche #%i dauerte %.2fs, Genauigkeit: %.2f%%", epoch, epochDuration / 1000.f, accuracy * 100.f));
+                LINE_OUT(StringFormat("Epoche #%i dauerte %.2fs, Genauigkeit: %.2f%%", epoch, epochTimer.Read() / 1000.f, accuracy * 100.f));
                 averageAccuracy += accuracy;
             }
-            trainingDuration += epochDuration;
         }
         if (testData.size())
         {
             averageAccuracy /= numEpochs;
-            LINE_OUT(StringFormat("Trainingsdauer: %.2fs", trainingDuration / 1000.f));
+            LINE_OUT(StringFormat("Trainingsdauer: %.2fs", trainingTimer.Read() / 1000.f));
             LINE_OUT(StringFormat("Durchschnittliche Genauigkeit nach %i Epochen: %.2f%%", numEpochs, averageAccuracy * 100.f));
         }
     }
