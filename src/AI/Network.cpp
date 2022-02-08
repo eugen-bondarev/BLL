@@ -130,15 +130,17 @@ namespace AI
     {
         float averageAccuracy = 0.f;
         const AI::Timer trainingTimer;
+
+        NetworkAdjustments adjustments = CreateAdjustmentsShape();
+
         for (size_t epoch = 0; epoch < numEpochs; ++epoch)
         {
             const AI::Timer epochTimer;
 
-            const TrainingData shuffled{ Util::Shuffle(trainingData) };
+            const TrainingData shuffled = Util::Shuffle(trainingData);
 
             for (size_t sample = 0; sample < shuffled.size(); sample += miniBatchSize)
             {
-                NetworkAdjustments adjustments = CreateAdjustmentsShape();
                 const TrainingData miniBatch = CreateMiniBatch(shuffled, miniBatchSize, sample);
                 Backpropagation(miniBatch, adjustments);
                 ApplyAdjustments(adjustments, miniBatchSize, eta);
