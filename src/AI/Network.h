@@ -18,8 +18,8 @@ namespace AI
         Matrix Feedforward(const Matrix& input);
         void SGD(
             const TrainingData& trainingData, 
-            const size_t miniBatchSize, 
             const size_t numEpochs, 
+            const size_t miniBatchSize, 
             const Num eta
         );
 

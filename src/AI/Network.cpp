@@ -2,6 +2,8 @@
 
 #include "Util/Util.h"
 
+#include "Metrics.h"
+
 namespace AI
 {
     Network::Network(const NetworkDescriptor& descriptor)
@@ -104,7 +106,7 @@ namespace AI
         }
     }
 
-    void Network::SGD(const TrainingData& trainingData, const size_t miniBatchSize, const size_t numEpochs, const Num eta)
+    void Network::SGD(const TrainingData& trainingData, const size_t numEpochs, const size_t miniBatchSize, const Num eta)
     {
         for (size_t epoch = 0; epoch < numEpochs; ++epoch)
         {

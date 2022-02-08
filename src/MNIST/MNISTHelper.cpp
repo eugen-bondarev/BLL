@@ -30,7 +30,7 @@ namespace MNIST
             }
 
             Eigen::Map<Matrix> m(input.data(), input.size(), 1);
-            dataset[i].input = Matrix(m);
+            dataset[i].input = Matrix(Eigen::Map<Matrix>(input.data(), input.size(), 1));
 
             dataset[i].output = Matrix(10, 1);
             dataset[i].output.setZero();
