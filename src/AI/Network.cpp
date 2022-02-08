@@ -55,17 +55,17 @@ namespace AI
         return GetLastLayer().a;
     }
 
-    void Network::CreateAdjustmentsShape(NetworkAdjustments& adjustments)
+    NetworkAdjustments Network::CreateAdjustmentsShape()
     {
-        adjustments.resize(layers.size());
+        NetworkAdjustments adjustments(layers.size());
         for (size_t l = 1; l < layers.size(); ++l)
         {
             adjustments[l].w = Matrix(layers[l].w.rows(), layers[l].w.cols());
-            adjustments[l].w.setZero();
-
             adjustments[l].b = Matrix(layers[l].b.rows(), layers[l].b.cols());
+            adjustments[l].w.setZero();
             adjustments[l].b.setZero();
         }
+        return adjustments;
     }
 
     static TrainingData CreateMiniBatch(const TrainingData& trainingData, const size_t miniBatchSize, const size_t sample)
@@ -84,7 +84,7 @@ namespace AI
         for (const TrainingSample& sample : miniBatch)
         {
             Feedforward(sample.input);
-            Matrix y{ (sample.output.array() - layers[layers.size() - 1].a.array()).pow(1) };
+            Matrix y{ sample.output.array() - layers[layers.size() - 1].a.array() };
 
             for (size_t l = layers.size(); l--> 1;)
             {
@@ -94,7 +94,7 @@ namespace AI
         }
     }
 
-    void Network::ApplyAndNullifyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta)
+    void Network::ApplyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta)
     {
         for (size_t l = 1; l < layers.size(); ++l)
         {
@@ -106,20 +106,58 @@ namespace AI
         }
     }
 
-    void Network::SGD(const TrainingData& trainingData, const size_t numEpochs, const size_t miniBatchSize, const Num eta)
+    float Network::Test(const TrainingData& testData, const TestComparator& comparator) 
     {
+        size_t numRightPredictions = 0;
+        for (size_t i = 0; i < testData.size(); ++i) 
+        {
+            const TrainingSample& sample = testData[i];
+            const Matrix output = Feedforward(sample.input);
+            const bool success = comparator(output, sample.output);
+            if (success) numRightPredictions++;
+        }
+        return numRightPredictions / static_cast<float>(testData.size());
+    }
+
+    void Network::SGD(
+        const TrainingData& trainingData, 
+        const size_t numEpochs, 
+        const size_t miniBatchSize, 
+        const Num eta, 
+        const TrainingData& testData,
+        const TestComparator& comparator
+    )
+    {
+        float averageAccuracy = 0.f;
+        float trainingDuration = 0.f;
         for (size_t epoch = 0; epoch < numEpochs; ++epoch)
         {
+            AI::Timer epochTimer;
+
             const TrainingData shuffled{ Util::Shuffle(trainingData) };
 
-            NetworkAdjustments adjustments{};
-            CreateAdjustmentsShape(adjustments);
             for (size_t sample = 0; sample < shuffled.size(); sample += miniBatchSize)
             {
+                NetworkAdjustments adjustments = CreateAdjustmentsShape();
                 const TrainingData miniBatch{ CreateMiniBatch(shuffled, miniBatchSize, sample) };
                 Backpropagation(miniBatch, adjustments);
-                ApplyAndNullifyAdjustments(adjustments, miniBatchSize, eta);
+                ApplyAdjustments(adjustments, miniBatchSize, eta);
             }
+
+            float epochDuration = epochTimer.Read();
+            if (testData.size()) 
+            {
+                const float accuracy = Test(testData, comparator);
+                LINE_OUT(StringFormat("Epoche #%i dauerte %.2fs, Genauigkeit: %.2f%%", epoch, epochDuration / 1000.f, accuracy * 100.f));
+                averageAccuracy += accuracy;
+            }
+            trainingDuration += epochDuration;
+        }
+        if (testData.size())
+        {
+            averageAccuracy /= numEpochs;
+            LINE_OUT(StringFormat("Trainingsdauer: %.2fs", trainingDuration / 1000.f));
+            LINE_OUT(StringFormat("Durchschnittliche Genauigkeit nach %i Epochen: %.2f%%", numEpochs, averageAccuracy * 100.f));
         }
     }
 }

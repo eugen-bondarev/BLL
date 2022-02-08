@@ -37,7 +37,7 @@ namespace AI
 
     Matrix Layer::PropagateError(const Matrix& y, LayerAdjustments& adjustments)
     {
-        const Matrix delCdelA = (a - y) * 1.0f;
+        const Matrix delCdelA = a - y;
         const Matrix delAdelZ = z.unaryExpr(g.derivative);
         const Matrix delCdelZ = delCdelA.array() * delAdelZ.array();
         

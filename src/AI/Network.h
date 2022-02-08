@@ -20,16 +20,20 @@ namespace AI
             const TrainingData& trainingData, 
             const size_t numEpochs, 
             const size_t miniBatchSize, 
-            const Num eta
+            const Num eta,
+            const TrainingData& testData = {},
+            const TestComparator& comparator = DefaultComparator
         );
 
     private:
         Layer& GetFirstLayer();
         Layer& GetLastLayer();
 
+        float Test(const TrainingData& testData, const TestComparator& comparator);
+
         void Backpropagation(const TrainingData& miniBatch, NetworkAdjustments& adjustments);
-        void CreateAdjustmentsShape(NetworkAdjustments& adjustments);
-        void ApplyAndNullifyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta);
+        NetworkAdjustments CreateAdjustmentsShape();
+        void ApplyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta);
 
         Vec<Layer> layers;
     };

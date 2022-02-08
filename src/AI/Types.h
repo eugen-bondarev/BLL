@@ -6,6 +6,7 @@
 #include "Math.h"
 
 #include <vector>
+#include <functional>
 
 namespace AI
 {
@@ -19,6 +20,9 @@ namespace AI
     };
 
     using TrainingData = Vec<TrainingSample>;
+    using TestData = TrainingData;
+    using TestComparator = std::function<bool(const Matrix& m0, const Matrix& m1)>;
+    bool DefaultComparator(const Matrix& m0, const Matrix& m1);
 
     struct LayerAdjustments
     {

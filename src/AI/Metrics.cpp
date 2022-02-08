@@ -3,22 +3,22 @@
 #include <chrono>
 #include <iostream>
 
-namespace ai 
+namespace AI 
 {
-    unsigned long long get_time() 
+    unsigned long long GetTime() 
     {
         unsigned long long milliseconds_since_epoch = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
         return milliseconds_since_epoch;
     }
 
-    Timer::Timer(const std::string& p_label) : label{p_label}
+    Timer::Timer(const std::string& label) : label{label}
     {
-        start = get_time();
+        start = GetTime();
     }
 
-    unsigned long long Timer::read() const
+    unsigned long long Timer::Read() const
     {
-        const unsigned long long delta = get_time() - start;
+        const unsigned long long delta = GetTime() - start;
         return delta;
     }
 
@@ -29,7 +29,7 @@ namespace ai
             return;
         }
         
-        const unsigned long long delta = read();
+        const unsigned long long delta = Read();
         std::cout << label << " lasted " << delta << " ms\n";
     }
 }
