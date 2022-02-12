@@ -84,7 +84,7 @@ namespace AI
         for (const TrainingSample& sample : miniBatch)
         {
             Feedforward(sample.input);
-            Matrix y{ sample.output.array() - layers[layers.size() - 1].a.array() };
+            Matrix y{ (sample.output.array() - layers[layers.size() - 1].a.array()).pow(2) };
 
             for (size_t l = layers.size(); l--> 1;)
             {
@@ -146,7 +146,6 @@ namespace AI
                 ApplyAdjustments(adjustments, miniBatchSize, eta);
             }
 
-            const float epochDuration = epochTimer.Read();
             if (testData.size()) 
             {
                 const float accuracy = Test(testData, comparator);

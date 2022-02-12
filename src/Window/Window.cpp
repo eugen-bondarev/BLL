@@ -81,6 +81,7 @@ Window::Window(const size_t width, const size_t height)
     if (width == 0 || height == 0) { glfwMaximizeWindow(handle); }
     glfwMakeContextCurrent(handle);
     glfwSwapInterval(1);
+    glfwMaximizeWindow(handle);
 
     if (glewInit() != GLEW_OK)
     {

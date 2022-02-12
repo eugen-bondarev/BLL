@@ -19,22 +19,22 @@ namespace MNIST
             throw std::runtime_error("File " + labelsPath() + " not found");
         }
 
-        TrainingData dataset(images.size());
+        TrainingData dataset;
+        dataset.reserve(images.size());
 
         for (size_t i = 0; i < images.size(); ++i)
         {
-            Vec<Num> input(images[i].size());
+            Matrix input{ images[i].size(), 1 };
             for (size_t j = 0; j < images[i].size(); ++j)
             {
-                input[j] = images[i][j] / 255.0f;
+                input(j) = images[i][j] / 255.f;
             }
 
-            Eigen::Map<Matrix> m(input.data(), input.size(), 1);
-            dataset[i].input = Matrix(Eigen::Map<Matrix>(input.data(), input.size(), 1));
+            Matrix output = Matrix(10, 1);
+            output.setZero();
+            output(static_cast<int>(labels[i]), 0) = 1.f;
 
-            dataset[i].output = Matrix(10, 1);
-            dataset[i].output.setZero();
-            dataset[i].output(static_cast<int>(labels[i]), 0) = 1.0f;
+            dataset.push_back({ input, output });
         }
 
         return dataset;
