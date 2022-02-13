@@ -1,8 +1,8 @@
 #include "Network.h"
 
 #include "Util/Util.h"
-
 #include "Metrics.h"
+#include "Console.h"
 
 namespace AI
 {
@@ -155,7 +155,7 @@ namespace AI
             if (testData.size()) 
             {
                 const float accuracy = Test(testData, comparator);
-                LINE_OUT(StringFormat("Epoche #%i dauerte %.2fs, Genauigkeit: %.2f%%", epoch, epochTimer.Read() / 1000.f, accuracy * 100.f));
+                Console::Add(StringFormat("Epoche #%i dauerte %.2fs, Genauigkeit: %.2f%%%%", epoch, epochTimer.Read() / 1000.f, accuracy * 100.f));
                 averageAccuracy += accuracy;
             }
 
@@ -169,8 +169,8 @@ namespace AI
         if (testData.size())
         {
             averageAccuracy /= actualNumEpochs;
-            LINE_OUT(StringFormat("Trainingsdauer: %.2fs", trainingTimer.Read() / 1000.f));
-            LINE_OUT(StringFormat("Durchschnittliche Genauigkeit nach %i Epochen: %.2f%%", actualNumEpochs, averageAccuracy * 100.f));
+            Console::Add(StringFormat("Trainingsdauer: %.2fs", trainingTimer.Read() / 1000.f));
+            Console::Add(StringFormat("Durchschnittliche Genauigkeit nach %i Epochen: %.2f%%%%", actualNumEpochs, averageAccuracy * 100.f));
         }
         currentSgdProgress.store(1.f);
 

@@ -7,6 +7,7 @@
 #include "AI/Network.h"
 #include "AI/Math.h"
 #include "AI/Metrics.h"
+#include "AI/Console.h"
 
 #include <future>
 
@@ -44,6 +45,8 @@ int main()
         {
             window.BeginFrame();
 
+            AI::Console::ClearMessages();
+
             // ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
             ImVec2 v = ImGui::GetMainViewport()->Pos;
             ImVec2 s = ImGui::GetMainViewport()->Size;
@@ -67,8 +70,8 @@ int main()
             ImGui::InputFloat("##eta", &eta);
 
             ImGui::Separator();
-
-            if (ImGui::Button("Trainieren"))
+            
+            if (!network.IsTrainingRunning() && ImGui::Button("Trainieren"))
             {
                 trainingFuture = std::async(std::launch::async, [&]() { 
                     network.SGD(trainingData, numEpochs, miniBatchSize, eta, testData); 
@@ -201,25 +204,31 @@ int main()
             }
             ImGui::End();
 
-            if (true)
+            ImGui::Begin("Samples");
+            static int sample = 0;
+            static AI::Matrix matrix = testData[sample].input;
+            ImGui::RenderMatrix(matrix);
+            if (ImGui::DragInt("Sample", &sample, 1.f, 0, testData.size() - 1))
             {
-                ImGui::Begin("Samples");
-                static int sample = 0;
-                static AI::Matrix matrix = testData[sample].input;
-                ImGui::RenderMatrix(matrix);
-                if (ImGui::DragInt("Sample", &sample, 1.f, 0, testData.size() - 1))
-                {
-                    matrix = testData[sample].input;
-                }
-                if (ImGui::Button("Test"))
-                {
-                    res = network.Feedforward(matrix);
-                }
-                ImGui::End();
+                matrix = testData[sample].input;
             }
+            if (ImGui::Button("Test"))
+            {
+                res = network.Feedforward(matrix);
+            }
+            ImGui::End();
+
+            ImGui::Begin("Konsole");
+            for (int i = 0; i < AI::Console::GetMessages().size(); ++i)
+            {
+                ImGui::Text(AI::Console::GetMessages()[i].c_str());
+            }
+            ImGui::End();
 
             window.EndFrame();
         }
+
+        trainingFuture.wait();
     }
     catch (const std::runtime_error &error)
     {
