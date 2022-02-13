@@ -128,10 +128,14 @@ namespace AI
         const TestComparator& comparator
     )
     {
+        isTrainingRunning = true;
+
         float averageAccuracy = 0.f;
         const AI::Timer trainingTimer;
 
         NetworkAdjustments adjustments = CreateAdjustmentsShape();
+
+        size_t actualNumEpochs = 0;
 
         for (size_t epoch = 0; epoch < numEpochs; ++epoch)
         {
@@ -144,7 +148,9 @@ namespace AI
                 const TrainingData miniBatch = CreateMiniBatch(shuffled, miniBatchSize, sample);
                 Backpropagation(miniBatch, adjustments);
                 ApplyAdjustments(adjustments, miniBatchSize, eta);
+                currentEpochProgress.store(sample / static_cast<float>(shuffled.size()));
             }
+            currentSgdProgress.store(epoch / static_cast<float>(numEpochs));
 
             if (testData.size()) 
             {
@@ -152,12 +158,42 @@ namespace AI
                 LINE_OUT(StringFormat("Epoche #%i dauerte %.2fs, Genauigkeit: %.2f%%", epoch, epochTimer.Read() / 1000.f, accuracy * 100.f));
                 averageAccuracy += accuracy;
             }
+
+            actualNumEpochs++;
+            if (stopTraining) 
+            {
+                stopTraining = false;
+                break;
+            }
         }
         if (testData.size())
         {
-            averageAccuracy /= numEpochs;
+            averageAccuracy /= actualNumEpochs;
             LINE_OUT(StringFormat("Trainingsdauer: %.2fs", trainingTimer.Read() / 1000.f));
-            LINE_OUT(StringFormat("Durchschnittliche Genauigkeit nach %i Epochen: %.2f%%", numEpochs, averageAccuracy * 100.f));
+            LINE_OUT(StringFormat("Durchschnittliche Genauigkeit nach %i Epochen: %.2f%%", actualNumEpochs, averageAccuracy * 100.f));
         }
+        currentSgdProgress.store(1.f);
+
+        isTrainingRunning = false;
+    }
+
+    float Network::GetCurrentEpochProgress() const
+    {
+        return currentEpochProgress;
+    }
+
+    float Network::GetCurrentSGDProgress() const
+    {
+        return currentSgdProgress;
+    }
+
+    void Network::StopTraining() 
+    {
+        stopTraining = true;
+    }
+
+    bool Network::IsTrainingRunning() const
+    {
+        return isTrainingRunning;
     }
 }

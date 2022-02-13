@@ -15,7 +15,7 @@ file(GLOB_RECURSE var_src src/*.cpp external/imgui/*.cpp)
 
 add_executable(BLL ${var_src}) 
 
-add_compile_definitions(PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
+# add_compile_definitions(PROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
 
 target_link_libraries(BLL PRIVATE glfw GLEW::GLEW imgui::imgui Eigen3::Eigen)
 target_include_directories(BLL PRIVATE external/mnist_reader)

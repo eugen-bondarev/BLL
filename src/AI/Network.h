@@ -7,6 +7,8 @@
 #include "Layer.h"
 #include "Types.h"
 
+#include <atomic>
+
 namespace AI
 {
     class Network
@@ -25,6 +27,11 @@ namespace AI
             const TestComparator& comparator = DefaultComparator
         );
 
+        float GetCurrentEpochProgress() const;
+        float GetCurrentSGDProgress() const;
+        void StopTraining();
+        bool IsTrainingRunning() const;
+
     private:
         Layer& GetFirstLayer();
         Layer& GetLastLayer();
@@ -36,6 +43,11 @@ namespace AI
         void ApplyAdjustments(NetworkAdjustments& adjustments, const size_t miniBatchSize, const Num eta);
 
         Vec<Layer> layers;
+
+        std::atomic<float> currentEpochProgress = 0.f;
+        std::atomic<float> currentSgdProgress = 0.f;
+        std::atomic<bool> isTrainingRunning = false;
+        std::atomic<bool> stopTraining = false;
     };
 }
 
